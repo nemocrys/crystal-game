@@ -13,7 +13,7 @@ If you use this code in your research, please cite our article:
 
 Screenshot:
 
-<img src="https://github.com/nemocrys/sim-demo-cz/blob/main/pics/pic_temp.png" height="450"><img src="https://github.com/nemocrys/crystal-game/blob/main/screenshot.png" height="600">
+<img src="https://github.com/nemocrys/crystal-game/blob/main/screenshot.png" height="600">
 
 ## Acknowledgements
 
