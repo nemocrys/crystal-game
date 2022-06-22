@@ -161,51 +161,48 @@ btn2.grid(column=1, row=2, columnspan=2, padx=10)
 lbl2 = Label(root, text="V [mm/min] = "+str(vp))
 lbl2.grid(column=1, row=3, columnspan=2, padx=10)
 
-
 def btn3_run():
-    global vp
-    if vp<100: vp = vp + 1
-    lbl2.config(text="V [mm/min] = "+str(round(vp,2)))
-    re.append([tt,vp,tm])
-
-btn3 = Button(root, text="V+", width=10, command=btn3_run)
-btn3.grid(column=2, row=4, padx=10)
-
-
-def btn4_run():
     global vp
     if vp>-100: vp = vp - 1
     lbl2.config(text="V [mm/min] = "+str(round(vp,2)))
     re.append([tt,vp,tm])
 
-btn4 = Button(root, text="V-", width=10, command=btn4_run)
-btn4.grid(column=1, row=4, padx=10)
+btn3 = Button(root, text="V-", width=10, command=btn3_run)
+btn3.grid(column=1, row=4, padx=10)
 
+def btn4_run():
+    global vp
+    if vp<100: vp = vp + 1
+    lbl2.config(text="V [mm/min] = "+str(round(vp,2)))
+    re.append([tt,vp,tm])
+
+btn4 = Button(root, text="V+", width=10, command=btn4_run)
+btn4.grid(column=2, row=4, padx=10)
 
 lbl3 = Label(root, text="T [C] = "+str(tm))
 lbl3.grid(column=1, row=5, columnspan=2, padx=10)
 
-
 def btn5_run():
-    global tm
-    if tm<250: tm = tm + 1
-    lbl3.config(text="T [C] = "+str(round(tm,1)))
-    canvas1.itemconfig(rect3, fill=temptocol(tm))
-    re.append([tt,vp,tm])
-
-btn5 = Button(root, text="T+", width=10, command=btn5_run)
-btn5.grid(column=2, row=6, padx=10)
-
-
-def btn6_run():
     global tm
     if tm>232: tm = tm - 1
     lbl3.config(text="T [C] = "+str(round(tm,1)))
     canvas1.itemconfig(rect3, fill=temptocol(tm))
     re.append([tt,vp,tm])
 
-btn6 = Button(root, text="T-", width=10, command=btn6_run)
-btn6.grid(column=1, row=6, padx=10)
+btn5 = Button(root, text="T-", width=10, command=btn5_run)
+btn5.grid(column=1, row=6, padx=10)
+
+def btn6_run():
+    global tm
+    if tm<250: tm = tm + 1
+    lbl3.config(text="T [C] = "+str(round(tm,1)))
+    canvas1.itemconfig(rect3, fill=temptocol(tm))
+    re.append([tt,vp,tm])
+
+btn6 = Button(root, text="T+", width=10, command=btn6_run)
+btn6.grid(column=2, row=6, padx=10)
+
+
 
 # ----------
 
