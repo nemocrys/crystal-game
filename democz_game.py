@@ -98,8 +98,8 @@ def calculate():
             if seeding == True and zs>10 :
                 L = zs-10 # seed-melt distance
                 canvas1.itemconfig(txt2, text='')
-                if crystal_is_connected:
-                    if vp>0:
+                if vp>0:
+                    if crystal_is_connected:
                         D = 1000*4*(L/1000.0)*10*(tm-20-500*(L/1000.0)) / ( (vp/60000.0)*7179*6e4 + 62*(tm-232)/0.01 )
                         if len(cr)==0 or L-cr[-1][0]>1: # reduce shape step to 1mm
                             if len(cr)==0: #set starting diameter to 2 mm (=seeding diameter)
@@ -115,15 +115,16 @@ def calculate():
                         canvas1.coords(txt2, sx(23-0.5*D), sy(10)) 
                         canvas1.itemconfig(txt2, text='D='+str(round(D,1))+' mm')
                         # print('Growing: L='+str(L)+' D='+str(D))
-                    if vp<0:
-                        for i in reversed(range(len(cr))):
-                            if cr[i][0]>L: cr.pop(i)
+                    else: # draw ripped crystal
                         canvas1.delete("cr") # delete the old polygon
-                        if len(cr)>1: canvas1.create_polygon(polyxy(cr), fill="grey", outline="black", tag="cr")
-                        # print('Melting: L='+str(L))
-                else: # draw ripped crystal
+                        if len(cr)>1: canvas1.create_polygon(polyxy(cr), fill="grey", outline="black", tag="cr")                        
+                if vp<0:
+                    for i in reversed(range(len(cr))):
+                        if cr[i][0]>L: cr.pop(i)
                     canvas1.delete("cr") # delete the old polygon
                     if len(cr)>1: canvas1.create_polygon(polyxy(cr), fill="grey", outline="black", tag="cr")
+                    # print('Melting: L='+str(L))
+
 
         root.after(100, calculate) # delay in ms!!!
 
