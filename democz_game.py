@@ -104,8 +104,7 @@ def calculate():
                         if len(cr)==0 or L-cr[-1][0]>1: # reduce shape step to 1mm
                             if len(cr)==0: #set starting diameter to 2 mm (=seeding diameter)
                                 D = 2
-                            if D<0.5: # crystal rips from melt if D<0.5mm
-                                D = 0
+                            if D<0.15: # crystal rips from melt
                                 crystal_is_connected=False
 
                             cr.append([L, D])
