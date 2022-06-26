@@ -120,9 +120,6 @@ def calculate():
                 canvas1.coords(rect4, sx(24.75), sy(300), sx(25.25), sy(zs+20))
                 canvas1.coords(txt1, sx(27), sy(zs)) 
                 canvas1.itemconfig(txt1, text=lbl_zCoordinate_display[language]+str(round(zs))+' mm')
-                weight_g=calc_weight(cr)                                           
-                canvas1.coords(txt3, sx(23), sy(zs)) 
-                canvas1.itemconfig(txt3, text=lbl_weight_display[language]+str(round(weight_g,1))+' g')
             if zs<10 :
                 seeding = True
                 crystal_is_connected = True
@@ -159,6 +156,10 @@ def calculate():
                     canvas1.delete("cr") # delete the old polygon
                     if len(cr)>1: canvas1.create_polygon(polyxy(cr), fill="grey", outline="black", tag="cr")
                     # print('Melting: L='+str(L))
+
+                weight_g=calc_weight(cr)                                       
+                canvas1.coords(txt3, sx(23), sy(zs)) 
+                canvas1.itemconfig(txt3, text=lbl_weight_display[language]+str(round(weight_g,3))+' g')
 
 
         root.after(100, calculate) # delay in ms!!!
