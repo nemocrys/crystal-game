@@ -14,9 +14,13 @@ CHANGES:
 20.07.2022
 - Canvas is resized with main window
 
+24.01.2022
+- Added option for water with 100 C initial T
+
 
 TODO
 
+Start can pressed multiple times on gamepad!!
 Show target diameter 
 Score board?
 
@@ -39,18 +43,19 @@ root.option_add( "*font", "lucida 16 bold" )
 
 # ---------- Global variables
 
-USE_REALITY = False
-USE_GAMEPAD = False
+USE_REALITY = FALSE
+USE_GAMEPAD = True
+USE_WATER = True
 
 global vp, tm, tt, zs, stop, seeding, cr, dt, tts, canvasw, canvash
 
 vp = 0.0 # pull rate [mm/min]
 tm = 240 # melt temperature [C]
 tt = 0.0 # time [min]
-zs = 200.0 # seed bottom coord [mm]
+zs = 200 # seed bottom coord [mm]
 cr = []  # crystal shape
 re = []  # recipe
-dt = 1/10 # time increment [min] for 100 ms; use 1/600 for real time
+dt = 0.1 # time increment [min] for 100 ms; see USE_REALITY below!!  
 weight = 0
 canvasw = 400
 canvash = 600
@@ -78,11 +83,14 @@ language = 1 #0: deutsch; 1: english
 if USE_REALITY:
     import ai_interface as ai
     ai.setport(timeout=0.05) # use small value
-    dt = 1/600
+    dt = 1/60
 
 if USE_GAMEPAD:
     import gamepad as gp
     gp.setdevice()
+
+if USE_WATER:
+    tm = 100
 
 # ---------- Screen coordinates 50x300 mm -> 400x600 px
 
@@ -126,6 +134,8 @@ def calc_weight(cr):
 
 def temptocol(T):
     r = int(100+(200-100)/(250-232)*(T-232)) # 232->100, 250->200
+    if USE_WATER:
+        r = int(100+(200-100)/(100.0-0.0)*(T-0.0)) # 232->100, 250->200
     g = 70
     b = 255
     return "#%02x%02x%02x" % (r,g,b)   
@@ -287,10 +297,13 @@ lbl3.grid(column=1, row=5, columnspan=2, padx=10)
 
 def btn5_run():
     global tm
-    if tm>232: tm = tm - 1
+    if USE_WATER:
+        tm = tm - 1
+    else:
+        if tm>232: tm = tm - 1
     lbl3.config(text=lbl_temperature_display[language]+str(round(tm,1)))
     canvas1.itemconfig(rect3, fill=temptocol(tm))
-    if USE_REALITY: ai.set_cructemp(tm, delay=0.2)
+    if USE_REALITY: ai.set_cructemp(tm)
     re.append([tt,vp,tm])
 
 btn5 = Button(root, text=lbl_temperature_button[language]+"-", width=10, command=btn5_run)
@@ -299,10 +312,13 @@ btn5.grid(column=1, row=6, padx=10)
 
 def btn6_run():
     global tm
-    if tm<250: tm = tm + 1
+    if USE_WATER:
+        tm = tm + 1
+    else:
+        if tm<250: tm = tm + 1
     lbl3.config(text=lbl_temperature_display[language]+str(round(tm,1)))
     canvas1.itemconfig(rect3, fill=temptocol(tm))
-    if USE_REALITY: ai.set_cructemp(tm, delay=0.2)
+    if USE_REALITY: ai.set_cructemp(tm)
     #time.sleep(2)
     re.append([tt,vp,tm])
 
