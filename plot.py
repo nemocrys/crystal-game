@@ -41,8 +41,28 @@ ax3.grid()
 
 ax1.set_title("recipe",fontsize=14, y=1.0, pad=-14)
 ax3.set_title('crystal',fontsize=14, y=1.0, pad=-14)
+plt.tight_layout()
 
 f = plt.gcf()
-
-plt.tight_layout()
 f.savefig("democz-results.pdf",dpi=300)
+
+max_diameter = dfC["diameter"].max()
+max_length = dfC["length"].max()
+
+f, ax = plt.subplots(figsize=(3,max_length/10*0.3937))
+ax.plot(dfC["diameter"],dfC["length"],lw=2)
+ax.set_ylabel("length [mm]")
+ax.set_xlabel("diameter [mm]")
+ax.invert_yaxis()
+ax.set_aspect("equal")
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_visible(False)
+ax.spines['left'].set_visible(False)
+# get the positions of the xticks
+# set the labels for the xticks
+xticks = ax.get_xticks()
+ax.set_xticklabels(xticks, rotation = 90)
+plt.tight_layout()
+f = plt.gcf()
+f.savefig("crystal.pdf",dpi=300)
