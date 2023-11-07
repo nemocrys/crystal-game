@@ -2,7 +2,6 @@ from tkinter import *
 import time
 import numpy as np
 from postprocess import calculate_score
-import pandas as pd
 
 '''
 
@@ -262,10 +261,9 @@ def btn2_run():
     with open('recipe.txt', "w") as file2:
         for p in re: file2.write(str(p[0])+' '+str(p[1])+' '+str(p[2])+'\n')
 
-    variables = ["time", "pullRate", "temperature"]
-    df = pd.read_csv("recipe.txt", index_col=False, header=None, sep=" ", names=variables)
-    dfC = pd.read_csv("crystal.txt", index_col=False, header=None, sep=" ", names=["length", "diameter"])
-    score = calculate_score(dfC, df, 8)
+    recipe = np.genfromtxt("recipe.txt")
+    crystal = np.genfromtxt("crystal.txt")
+    score = calculate_score(crystal, recipe, 8)
     print(score)
 
 

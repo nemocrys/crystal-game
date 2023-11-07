@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-def calculate_score(dfC, df, dset):
-    shape = dfC.to_numpy()
+def calculate_score(crystal, recipe, dset):
+    shape = crystal
 
     # Calculate the average diameter
     lengths = np.diff(shape[:, 0])
@@ -88,7 +88,7 @@ def main():
     dfC = pd.read_csv("crystal.txt", index_col=False, header=None, sep=" ", names=["length", "diameter"])
 
     plot_recipe(dfC, df)
-    score = calculate_score(dfC, df, 8)
+    score = calculate_score(dfC.to_numpy(), df.to_numpy(), 8)
     praise = ["Bummer, try again!", "Good job!", "Excellent!", "Perfect!"]
     plt.suptitle(f"{praise[0]} Your score is: {int(score)}")
     plt.tight_layout()
