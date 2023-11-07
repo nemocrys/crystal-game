@@ -45,7 +45,7 @@ root.option_add( "*font", "lucida 16 bold" )
 
 USE_REALITY = FALSE
 USE_GAMEPAD = True
-USE_WATER = True
+USE_WATER = False
 
 global vp, tm, tt, zs, stop, seeding, cr, dt, tts, canvasw, canvash
 
