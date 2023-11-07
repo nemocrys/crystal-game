@@ -1,7 +1,8 @@
 from tkinter import *
 import time
 import numpy as np
-
+from postprocess import calculate_score
+import pandas as pd
 
 '''
 
@@ -260,6 +261,13 @@ def btn2_run():
         for p in cr: file1.write(str(p[0])+' '+str(p[1])+'\n')
     with open('recipe.txt', "w") as file2:
         for p in re: file2.write(str(p[0])+' '+str(p[1])+' '+str(p[2])+'\n')
+
+    variables = ["time", "pullRate", "temperature"]
+    df = pd.read_csv("recipe.txt", index_col=False, header=None, sep=" ", names=variables)
+    dfC = pd.read_csv("crystal.txt", index_col=False, header=None, sep=" ", names=["length", "diameter"])
+    score = calculate_score(dfC, df, 8)
+    print(score)
+
 
 btn2 = Button(root, text=lbl_stop_button[language], width=20, command=btn2_run)
 btn2.grid(column=1, row=2, columnspan=2, padx=10)
