@@ -44,7 +44,7 @@ root.option_add( "*font", "lucida 16 bold" )
 # ---------- Global variables
 
 USE_REALITY = FALSE
-USE_GAMEPAD = True
+USE_GAMEPAD = False
 USE_WATER = False
 
 global vp, tm, tt, zs, stop, seeding, cr, dt, tts, canvasw, canvash
@@ -155,7 +155,7 @@ rect4 = canvas1.create_rectangle(sx(24.75), sy(300), sx(25.25), sy(zs+20), width
 txt1 = canvas1.create_text(sx(27), sy(zs), text=lbl_zCoordinate_display[language]+str(round(zs))+' mm', anchor='sw', fill="black", font="lucida 12")
 txt2 = canvas1.create_text(sx(0), sy(10), text='', anchor='se', fill="black", font="lucida 12")
 txt3 = canvas1.create_text(sx(0), sy(10), text='', anchor='se', fill="black", font="lucida 12")
-
+txt4 = canvas1.create_text(sx(25), sy(280), text='', anchor='center', fill="black", font="lucida 14")
 canvas1.addtag_all("all")
 
 # Called also on startup
@@ -261,10 +261,15 @@ def btn2_run():
     with open('recipe.txt', "w") as file2:
         for p in re: file2.write(str(p[0])+' '+str(p[1])+' '+str(p[2])+'\n')
 
-    recipe = np.genfromtxt("recipe.txt")
-    crystal = np.genfromtxt("crystal.txt")
-    score = calculate_score(crystal, recipe, 8)
+    if len(cr)>0:
+        recipe = np.genfromtxt("recipe.txt")
+        crystal = np.genfromtxt("crystal.txt")
+        score = calculate_score(crystal, recipe, 8)
+    else:
+        score = 0
     print(score)
+    praise = ["Bummer, try again!", "Good job!", "Excellent!", "Perfect!"]
+    canvas1.itemconfig(txt4, text=f"{praise[0]} Your score is {int(score)}")
 
 
 btn2 = Button(root, text=lbl_stop_button[language], width=20, command=btn2_run)
