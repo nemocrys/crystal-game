@@ -279,6 +279,7 @@ def btn2_run():
     canvas1.itemconfig(txt4, text=f"{praise} Your score is {int(score)}")
     canvas1.coords(txt4box,canvas1.bbox(txt4))
     canvas1.itemconfig(txt4box,fill="white",outline="white")
+    canvas1.tag_raise(txt4)
     canvas1.tag_lower(txt4box,txt4)
 
 
