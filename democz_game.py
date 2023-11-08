@@ -1,7 +1,7 @@
 from tkinter import *
 import time
 import numpy as np
-from postprocess import calculate_score
+from postprocess import calculate_score, convert_score_to_praise
 
 '''
 
@@ -53,6 +53,7 @@ vp = 0.0 # pull rate [mm/min]
 tm = 240 # melt temperature [C]
 tt = 0.0 # time [min]
 zs = 200 # seed bottom coord [mm]
+dtarget = 10 # target crystal diameter [mm]
 cr = []  # crystal shape
 re = []  # recipe
 dt = 0.1 # time increment [min] for 100 ms; see USE_REALITY below!!  
@@ -155,7 +156,11 @@ rect4 = canvas1.create_rectangle(sx(24.75), sy(300), sx(25.25), sy(zs+20), width
 txt1 = canvas1.create_text(sx(27), sy(zs), text=lbl_zCoordinate_display[language]+str(round(zs))+' mm', anchor='sw', fill="black", font="lucida 12")
 txt2 = canvas1.create_text(sx(0), sy(10), text='', anchor='se', fill="black", font="lucida 12")
 txt3 = canvas1.create_text(sx(0), sy(10), text='', anchor='se', fill="black", font="lucida 12")
-txt4 = canvas1.create_text(sx(25), sy(280), text='', anchor='center', fill="black", font="lucida 14")
+txt4 = canvas1.create_text(sx(25), sy(150), text='', anchor='center', fill="black", font="lucida 14")
+txt5 = canvas1.create_text(sx(49), sy(10), text=f'Target: D = {dtarget} mm', anchor='se', fill="black", font="lucida 12")
+
+txt4box=canvas1.create_rectangle(canvas1.bbox(txt4),fill="",outline="")
+
 canvas1.addtag_all("all")
 
 # Called also on startup
@@ -244,6 +249,8 @@ def btn1_run():
     stop = False
     btn1["state"] = "disabled"
     root.resizable(width=False, height=False)
+    canvas1.itemconfig(txt4, text=" ")
+    canvas1.itemconfig(txt4box,fill="",outline="")
     calculate()
 
 btn1 = Button(root, text=lbl_start_button[language], width=20, command=btn1_run)
@@ -264,12 +271,15 @@ def btn2_run():
     if len(cr)>0:
         recipe = np.genfromtxt("recipe.txt")
         crystal = np.genfromtxt("crystal.txt")
-        score = calculate_score(crystal, recipe, 8)
+        score = calculate_score(crystal, recipe, 10)
     else:
         score = 0
     print(score)
-    praise = ["Bummer, try again!", "Good job!", "Excellent!", "Perfect!"]
-    canvas1.itemconfig(txt4, text=f"{praise[0]} Your score is {int(score)}")
+    praise = convert_score_to_praise(score)
+    canvas1.itemconfig(txt4, text=f"{praise} Your score is {int(score)}")
+    canvas1.coords(txt4box,canvas1.bbox(txt4))
+    canvas1.itemconfig(txt4box,fill="white",outline="white")
+    canvas1.tag_lower(txt4box,txt4)
 
 
 btn2 = Button(root, text=lbl_stop_button[language], width=20, command=btn2_run)

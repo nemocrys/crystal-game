@@ -2,6 +2,18 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
+def convert_score_to_praise(score):
+    if score <= 0:
+        return "Bummer, try again!"
+    elif score <= 25*290:
+        return "Not bad!"
+    elif score <= 75*290:
+        return "Excellent!"
+    elif score <= 99*290:
+        return "Perfect Crystal!"
+    else:
+        return "Perfect Crystal!"
+    
 def calculate_score(crystal, recipe, dset):
     shape = crystal
 
@@ -23,10 +35,11 @@ def calculate_score(crystal, recipe, dset):
 
     # Weight for each metric
     weight_mse = 1
-    weight_diameter_change_penalty = 1
+    weight_diameter_change_penalty = 0.5
 
     # Final score
-    score = total_length*(weight_mse * mse + weight_diameter_change_penalty * diameter_change_penalty)
+    score = 100-(weight_mse * mse + weight_diameter_change_penalty * diameter_change_penalty)
+    score *= total_length
     print(f"Target diameter: {d_target}")
     print(f"AVG diameter: {mean_diameter}")
     print(f"Total length: {total_length}")
