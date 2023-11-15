@@ -5,11 +5,11 @@ import numpy as np
 def convert_score_to_praise(score):
     if score <= 0:
         return "Bummer, try again!"
-    elif score <= 25*290:
+    elif score <= 25*2.90:
         return "Not bad!"
-    elif score <= 75*290:
+    elif score <= 75*2.90:
         return "Excellent!"
-    elif score <= 99*290:
+    elif score <= 99*2.90:
         return "Perfect Crystal!"
     else:
         return "Perfect Crystal!"
@@ -39,7 +39,7 @@ def calculate_score(crystal, recipe, dset):
 
     # Final score
     score = 100-(weight_mse * mse + weight_diameter_change_penalty * diameter_change_penalty)
-    score *= total_length
+    score *= total_length/100
     print(f"Target diameter: {d_target}")
     print(f"AVG diameter: {mean_diameter}")
     print(f"Total length: {total_length}")
