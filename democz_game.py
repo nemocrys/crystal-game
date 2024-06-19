@@ -1,7 +1,7 @@
 from tkinter import *
 import time
 import numpy as np
-from postprocess import calculate_score, convert_score_to_praise
+from postprocess import calculate_score, convert_score_to_praise, get_highscore, set_highscore
 
 '''
 
@@ -52,7 +52,10 @@ global vp, tm, tt, zs, stop, seeding, cr, dt, tts, canvasw, canvash
 vp = 0.0 # pull rate [mm/min]
 tm = 240 # melt temperature [C]
 tt = 0.0 # time [min]
-zs = 200 # seed bottom coord [mm]
+zs = 100 # seed bottom coord [mm]
+vpstep = 1 # pull rate step [mm/min]
+Tstep = 0.5 # temperature step [mm/min]
+relaxation = 1
 dtarget = 10 # target crystal diameter [mm]
 cr = []  # crystal shape
 re = []  # recipe
@@ -158,6 +161,8 @@ txt2 = canvas1.create_text(sx(0), sy(10), text='', anchor='se', fill="black", fo
 txt3 = canvas1.create_text(sx(0), sy(10), text='', anchor='se', fill="black", font="lucida 12")
 txt4 = canvas1.create_text(sx(25), sy(150), text='', anchor='center', fill="black", font="lucida 14")
 txt5 = canvas1.create_text(sx(49), sy(10), text=f'Target: D = {dtarget} mm', anchor='se', fill="black", font="lucida 12")
+hscore = get_highscore()
+txt6 = canvas1.create_text(sx(45), sy(290), text=f'Highscore: {int(hscore)}', anchor='se', fill="black", font="lucida 12")
 
 txt4box=canvas1.create_rectangle(canvas1.bbox(txt4),fill="",outline="")
 
@@ -203,7 +208,11 @@ def calculate():
                 canvas1.itemconfig(txt2, text='')
                 if vp>0:
                     if crystal_is_connected:
-                        D = 1000*4*(L/1000.0)*10*(tm-20-500*(L/1000.0)) / ( (vp/60000.0)*7179*6e4 + 62*(tm-232)/0.01 )
+                        Dcalc = 1000*4*(L/1000.0)*10*(tm-20-500*(L/1000.0)) / ( (vp/60000.0)*7179*6e4 + 62*(tm-232)/0.01 )
+                        Dold = Dcalc
+                        if len(cr)>0:
+                            Dold = cr[len(cr)-1][1]
+                        D = ((1-relaxation)*Dold + relaxation*Dcalc) / 2
                         if len(cr)==0 or L-cr[-1][0]>1: # reduce shape step to 1mm
                             if len(cr)==0: #set starting diameter to 2 mm (=seeding diameter)
                                 D = 2
@@ -271,11 +280,15 @@ def btn2_run():
     if len(cr)>0:
         recipe = np.genfromtxt("recipe.txt")
         crystal = np.genfromtxt("crystal.txt")
-        score = calculate_score(crystal, recipe, 10)
+        score = calculate_score(crystal, recipe, dtarget)
+        hscore = get_highscore()
     else:
         score = 0
     print(score)
     praise = convert_score_to_praise(score)
+    if score>hscore:
+        set_highscore(score)
+        canvas1.itemconfig(txt6, text=f"Highscore: {int(score)}")
     canvas1.itemconfig(txt4, text=f"{praise} Your score is {int(score)}")
     canvas1.coords(txt4box,canvas1.bbox(txt4))
     canvas1.itemconfig(txt4box,fill="white",outline="white")
@@ -293,7 +306,7 @@ lbl2.grid(column=1, row=3, columnspan=2, padx=10)
 
 def btn3_run():
     global vp
-    if vp>-100: vp = vp - 1
+    if vp>-100: vp = vp - vpstep
     lbl2.config(text=lbl_pullRate_display[language]+str(round(vp,2)))
     if USE_REALITY: ai.set_pullrate(vp/60000.0)
     re.append([tt,vp,tm])
@@ -304,7 +317,7 @@ btn3.grid(column=1, row=4, padx=10)
 
 def btn4_run():
     global vp
-    if vp<100: vp = vp + 1
+    if vp<100: vp = vp + vpstep
     lbl2.config(text=lbl_pullRate_display[language]+str(round(vp,2)))
     if USE_REALITY: ai.set_pullrate(vp/60000.0)
     re.append([tt,vp,tm])
@@ -320,9 +333,9 @@ lbl3.grid(column=1, row=5, columnspan=2, padx=10)
 def btn5_run():
     global tm
     if USE_WATER:
-        tm = tm - 1
+        tm = tm - Tstep
     else:
-        if tm>232: tm = tm - 1
+        if tm>232: tm = tm - Tstep
     lbl3.config(text=lbl_temperature_display[language]+str(round(tm,1)))
     canvas1.itemconfig(rect3, fill=temptocol(tm))
     if USE_REALITY: ai.set_cructemp(tm)
@@ -335,9 +348,9 @@ btn5.grid(column=1, row=6, padx=10)
 def btn6_run():
     global tm
     if USE_WATER:
-        tm = tm + 1
+        tm = tm + Tstep
     else:
-        if tm<250: tm = tm + 1
+        if tm<250: tm = tm + Tstep
     lbl3.config(text=lbl_temperature_display[language]+str(round(tm,1)))
     canvas1.itemconfig(rect3, fill=temptocol(tm))
     if USE_REALITY: ai.set_cructemp(tm)
