@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/505966891.svg)](https://doi.org/10.5281/zenodo.13887377)
+
 # crystal-game
 
 Visual simulation (game) for crystal growth with Czochralski method
