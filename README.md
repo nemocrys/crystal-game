@@ -5,9 +5,9 @@ Visual simulation (game) for crystal growth with Czochralski method
 The project is developed and maintained by the [**Model experiments group**](https://www.ikz-berlin.de/en/research/materials-science/section-fundamental-description#c486) at the Leibniz Institute for Crystal Growth (IKZ).
 
 ### Referencing
-If you use this code in your research, please cite our article:
+The physics of a simple crystal growth setup is described in this article:
 
-> TODO
+> K. Dadzis, Czochralski growth of tin crystals as a multi-physical model experiment, 2023. [Preprint on arXiv](http://arxiv.org/abs/2305.06875)
 
 ## Documentation
 
