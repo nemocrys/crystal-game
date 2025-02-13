@@ -212,7 +212,7 @@ def calculate():
                         Dold = Dcalc
                         if len(cr)>0:
                             Dold = cr[len(cr)-1][1]
-                        D = ((1-relaxation)*Dold + relaxation*Dcalc) / 2
+                        D = ((1-relaxation)*Dold + relaxation*Dcalc)
                         if len(cr)==0 or L-cr[-1][0]>1: # reduce shape step to 1mm
                             if len(cr)==0: #set starting diameter to 2 mm (=seeding diameter)
                                 D = 2
